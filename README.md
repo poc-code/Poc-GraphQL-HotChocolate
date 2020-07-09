@@ -26,7 +26,7 @@ if (env.IsDevelopment())
 	app.UsePlayground();
     }
 
-    app.UseGraphQL("/api");
+    app.UseGraphQL("/ghapql");
 ```
 ### Model Author
 3. Adicionar as models.
