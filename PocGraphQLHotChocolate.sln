@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30002.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocGraphQLHotChocolate", "PocGraphQLHotChocolate\PocGraphQLHotChocolate.csproj", "{222A71F4-C23A-42AE-BBF0-24D16A9A6DD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocGraphQLHotChocolate.Infra", "PocGraphQLHotChocolate.Infra\PocGraphQLHotChocolate.Infra.csproj", "{0F558482-D2E8-4E29-B476-F1CC49C61BC7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{222A71F4-C23A-42AE-BBF0-24D16A9A6DD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{222A71F4-C23A-42AE-BBF0-24D16A9A6DD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{222A71F4-C23A-42AE-BBF0-24D16A9A6DD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{222A71F4-C23A-42AE-BBF0-24D16A9A6DD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F558482-D2E8-4E29-B476-F1CC49C61BC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F558482-D2E8-4E29-B476-F1CC49C61BC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F558482-D2E8-4E29-B476-F1CC49C61BC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F558482-D2E8-4E29-B476-F1CC49C61BC7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {86848A24-6D5C-4018-9F51-EAFE9023AFEC}
+	EndGlobalSection
+EndGlobal
