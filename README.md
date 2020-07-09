@@ -9,83 +9,78 @@ https://github.com/AARNOLD87/GraphQLWithHotChocolate
 A biblioteca HotChocolate.AspNetCore.Playground será usando para fazer teste no browser da api.
 
 ### Configuração inicial
-2. Configurar o GraphQL no startup da aplicação.
+#### 2. Configurar o GraphQL no startup da aplicação.
 	2.1 ConfigureServices
-[block:code]
-{
-  "codes": [
+```csharp
+services.AddGraphQL(s => SchemaBuilder.New()
+                .AddServices(s)
+                .AddType<AuthorType>()
+                .AddType<BookType>()
+                .AddQueryType<Query>()
+                .Create());
+```
+#### 2.2 Configure
+```csharp
+if (env.IsDevelopment())
     {
-      "code": "services.AddGraphQL(s => SchemaBuilder.New()\n                .AddServices(s)\n                .AddType<AuthorType>()\n                .AddType<BookType>()\n                .AddQueryType<Query>()\n                .Create());",
-      "language": "csharp"
+	app.UsePlayground();
     }
-  ]
-}
-[/block]
-	2.2 Configure
-[block:code]
-{
-  "codes": [
-    {
-      "code": "if (env.IsDevelopment())\n            {\n                app.UsePlayground();\n            }\n \n            app.UseGraphQL(\"/api\");\n",
-      "language": "csharp"
-    }
-  ]
-}
-[/block]
+
+    app.UseGraphQL("/api");
+```
 ### Model Author
 3. Adicionar as models.
 	3.1 Author
 		
-[block:code]
-{
-  "codes": [
-    {
-      "code": "public class Author\n\t\t{\n\t\t\tpublic int Id { get; set; }\n\t\t\tpublic string Name { get; set; }\n\t\t\tpublic string Surname { get; set; }\n\t\t}",
-      "language": "csharp"
-    }
-  ]
-}
-[/block]
+```csharp
+	public class Author
+	{
+	    public int Id { get; set; }
+	    public string Name { get; set; }
+	    public string Surname { get; set; }
+	}
+```
 ### Model Book		
 3.2 Book
-[block:code]
-{
-  "codes": [
-    {
-      "code": "public class Book\n\t\t{\n\t\t\tpublic int Id { get; set; }\n\t\t\tpublic int AuthorId { get; set; }\n\t\t\tpublic string Title { get; set; }\n\t\t\tpublic decimal Price { get; set; }\n\t\t}",
-      "language": "csharp"
-    }
-  ]
-}
-[/block]
+```csharp
+public class Book
+        {
+            public int Id { get; set; }
+            public int AuthorId { get; set; }
+            public string Title { get; set; }
+            public decimal Price { get; set; }
+        }
+```
 ### Types
 4. Definir as Types que serão expostos na api
 
 	4.1 AuthorType
-[block:code]
-{
-  "codes": [
-    {
-      "code": "public class AuthorType : ObjectType<Author>\n\t\t{\n\t\t\tprotected override void Configure(IObjectTypeDescriptor<Author> descriptor)\n\t\t\t{\n\t\t\t\tdescriptor.Field(a => a.Id).Type<IdType>();\n\t\t\t\tdescriptor.Field(a => a.Name).Type<StringType>();\n\t\t\t\tdescriptor.Field(a => a.Surname).Type<StringType>();\n\t\t\t}\n\t\t}",
-      "language": "csharp"
-    }
-  ]
-}
-[/block]
+```csharp
+	public class AuthorType : ObjectType<Author>
+        {
+            protected override void Configure(IObjectTypeDescriptor<Author> descriptor)
+            {
+                descriptor.Field(a => a.Id).Type<IdType>();
+                descriptor.Field(a => a.Name).Type<StringType>();
+                descriptor.Field(a => a.Surname).Type<StringType>();
+            }
+        }
+```
 		
 		
-	4.2 BookType
+#### 4.2 BookType
 		
-[block:code]
-{
-  "codes": [
-    {
-      "code": "public class BookType : ObjectType<Book>\n\t\t{\n\t\t\tprotected override void Configure(IObjectTypeDescriptor<Book> descriptor)\n\t\t\t{\n\t\t\t\tdescriptor.Field(b => b.Id).Type<IdType>();\n\t\t\t\tdescriptor.Field(b => b.Title).Type<StringType>();\n\t\t\t\tdescriptor.Field(b => b.Price).Type<DecimalType>();\n\t\t\t}\n\t\t}",
-      "language": "csharp"
-    }
-  ]
-}
-[/block]
+```csharp
+	public class BookType : ObjectType<Book>
+        {
+            protected override void Configure(IObjectTypeDescriptor<Book> descriptor)
+            {
+                descriptor.Field(b => b.Id).Type<IdType>();
+                descriptor.Field(b => b.Title).Type<StringType>();
+                descriptor.Field(b => b.Price).Type<DecimalType>();
+            }
+        }
+```
 		
 No GraphQL o Crud é tratado de forma separada em relação as consultas e inclusões e alterações de dados. As consultas 
 são chamadas que Query e inclusões e alterações chamados de Mutation.
@@ -101,31 +96,44 @@ anotação para ativar os filtros.
 
 5. Queries
 	5.1 Query	
-[block:code]
-{
-  "codes": [
-    {
-      "code": "public class Query\n\t\t{\n\t\t\tprivate readonly IAuthorService _authorService;\n\t\t\tpublic Query(IAuthorService authorService)\n\t\t\t{\n\t\t\t\t_authorService = authorService;\n\t\t\t}\n\t\t\t[UsePaging(SchemaType = typeof(AuthorType))]\n\t\t\t[UseFiltering]\n\t\t\tpublic IQueryable<Author> Authors => _authorService.GetAll();\n\t\t\t\n\t\t\t[UsePaging(SchemaType = typeof(BookType))]\n\t\t\t[UseFiltering]\n\t\t\tpublic IQueryable<Book> Books => _bookService.GetAll();\n\t\t}",
-      "language": "csharp"
-    }
-  ]
-}
-[/block]
+```csharp
+	public class Query
+        {
+            private readonly IAuthorService _authorService;
+            public Query(IAuthorService authorService)
+            {
+                _authorService = authorService;
+            }
+            [UsePaging(SchemaType = typeof(AuthorType))]
+            [UseFiltering]
+            public IQueryable<Author> Authors => _authorService.GetAll();
+            
+            [UsePaging(SchemaType = typeof(BookType))]
+            [UseFiltering]
+            public IQueryable<Book> Books => _bookService.GetAll();
+        }
+```
 Adicionamos um novo campo ao esquema BookType com o descritor.Field e pedimos que ele o resolvesse pelo método GetAuthor do AuthorResolver		
 
 ### Resolvers
-6. Resolver
+#### 6. Resolver
 	6.1 AuthorResolver
-[block:code]
-{
-  "codes": [
-    {
-      "code": "public class AuthorResolver\n\t\t{\n\t\t    private readonly IAuthorService _authorService;\n\t\t \n\t\t    public AuthorResolver([Service]IAuthorService authorService)\n\t\t    {\n\t\t        _authorService = authorService;\n\t\t    }\n\t\t \n\t\t    public Author GetAuthor(Book book, IResolverContext ctx)\n\t\t    {\n\t\t        return _authorService.GetAll().Where(a => a.Id == book.AuthorId).FirstOrDefault();\n\t\t    }\n\t\t}",
-      "language": "csharp"
-    }
-  ]
-}
-[/block]
+```csharp
+	public class AuthorResolver
+        {
+            private readonly IAuthorService _authorService;
+         
+            public AuthorResolver([Service]IAuthorService authorService)
+            {
+                _authorService = authorService;
+            }
+         
+            public Author GetAuthor(Book book, IResolverContext ctx)
+            {
+                return _authorService.GetAll().Where(a => a.Id == book.AuthorId).FirstOrDefault();
+            }
+        }
+```
 ### Mutation	
 Mutation
 Para concluir o CRUD com operações de criação e exclusão, precisamos implementar o que é chamado de mutação. É uma classe com métodos que indicam as operações possíveis. Ele deve ser gravado usando a seguinte instrução AddMutationTypez <Mutation> () que deve ser adicionada ao bloco de configuração do GraphQL em Startup.cs
@@ -133,107 +141,112 @@ Para concluir o CRUD com operações de criação e exclusão, precisamos implem
 7. Configuração
 	7.1 startup
 		7.2 ConfigureServices
-[block:code]
-{
-  "codes": [
-    {
-      "code": "services.AddGraphQL(s => SchemaBuilder.New()\n\t\t\t.AddServices(s)\n\t\t\t.AddType<AuthorType>()\n\t\t\t.AddType<BookType>()\n\t\t\t.AddQueryType<Query>()\n\t\t\t.AddMutationType<Mutation>()\n\t\t\t.Create());\n",
-      "language": "csharp"
-    }
-  ]
-}
-[/block]
+```csharp
+	services.AddGraphQL(s => SchemaBuilder.New()
+            .AddServices(s)
+            .AddType<AuthorType>()
+            .AddType<BookType>()
+            .AddQueryType<Query>()
+            .AddMutationType<Mutation>()
+            .Create());
+```
 O serviço precisará criar apenas uma nova instância do livro, adicioná-la à sua lista e retornar o livro criado.	
 No playground, podemos testar o novo recurso iniciando a consulta.
 		
 8. Mutation	
-[block:code]
+```csharp
 {
-  "codes": [
+  public class Mutation
     {
-      "code": "public class Mutation\n\t{\n\t\tprivate readonly IBookService _bookService;\n\t \n\t\tpublic Mutation(IBookService bookService)\n\t\t{\n\t\t\t_bookService = bookService;\n\t\t}\n\t \n\t\tpublic Book CreateBook(CreateBookInput inputBook)\n\t\t{\n\t\t\treturn _bookService.Create(inputBook);\n\t\t}\n\t}\n",
-      "language": "csharp"
+        private readonly IBookService _bookService;
+     
+        public Mutation(IBookService bookService)
+        {
+            _bookService = bookService;
+        }
+     
+        public Book CreateBook(CreateBookInput inputBook)
+        {
+            return _bookService.Create(inputBook);
+        }
     }
-  ]
-}
-[/block]
+```
 9. Input
 	9.1 CreateBookInput
-[block:code]
-{
-  "codes": [
-    {
-      "code": "public class CreateBookInput\n\t\t{\n\t\t\tpublic string Title { get; set; }\n\t\t\tpublic decimal Price { get; set; }\n\t\t\tpublic int AuthorId { get; set; }\n\t\t}",
-      "language": "csharp"
-    }
-  ]
-}
-[/block]
+```csharp
+	public class CreateBookInput
+        {
+            public string Title { get; set; }
+            public decimal Price { get; set; }
+            public int AuthorId { get; set; }
+        }
+```
 		
 	
 Vamos adicionar agora o recurso de remoção de livros alterando a Mutation existente acrescentando mais um método.
 A classe DeleteBookInput possui apenas uma propriedade do tipo int que representa o ID do livro que você deseja excluir.
 10. Mutation
-[block:code]
+```csharp
 {
-  "codes": [
-    {
-      "code": "public class Mutation\n\t{\n\t\tprivate readonly IBookService _bookService;\n\t \n\t\t...\n\t\t\n\t\tpublic Book DeleteBook(DeleteBookInput inputBook)\n\t\t{\n\t\t\tvar bookToDelete = _books.Single(b => b.Id == inputBook.Id);\n\t\t\t_books.Remove(bookToDelete);\n\t\t\treturn bookToDelete;\n\t\t}\n\t}",
-      "language": "csharp"
-    }
-  ]
-}
-[/block]
+	public class Mutation
+	    {
+		private readonly IBookService _bookService;
+
+		...
+
+		public Book DeleteBook(DeleteBookInput inputBook)
+		{
+		    var bookToDelete = _books.Single(b => b.Id == inputBook.Id);
+		    _books.Remove(bookToDelete);
+		    return bookToDelete;
+		}
+	    }
+```
 ### Exceções
 11. BookNotFoundException 
 		
-[block:code]
-{
-  "codes": [
-    {
-      "code": "public class BookNotFoundException : Exception\n\t\t{\n\t\t    public int BookId { get; internal set; }\n\t\t}",
-      "language": "csharp"
-    }
-  ]
-}
-[/block]
+```csharp
+	public class BookNotFoundException : Exception
+        {
+            public int BookId { get; internal set; }
+        }
 
-[block:code]
-{
-  "codes": [
-    {
-      "code": "public Book Delete(DeleteBookInput inputBook)\n\t{\n\t\tvar bookToDelete = _books.FirstOrDefault(b => b.Id == inputBook.Id);\n\t\tif (bookToDelete == null)\n\t\tthrow new BookNotFoundException() { BookId = inputBook.Id };\n\t\t_books.Remove(bookToDelete);\n\t\treturn bookToDelete;\n\t}\n",
-      "language": "csharp"
-    }
-  ]
-}
-[/block]
+```csharp
+	public Book Delete(DeleteBookInput inputBook)
+	    {
+		var bookToDelete = _books.FirstOrDefault(b => b.Id == inputBook.Id);
+		if (bookToDelete == null)
+		throw new BookNotFoundException() { BookId = inputBook.Id };
+		_books.Remove(bookToDelete);
+		return bookToDelete;
+	    }
+```
 12. Alterando a método da mutation de deleção do objeto
 	
 		
 13. IErrorFilter 
 	
-[block:code]
-{
-  "codes": [
+```csharp
+	public class BookNotFoundExceptionFilter : IErrorFilter
     {
-      "code": "public class BookNotFoundExceptionFilter : IErrorFilter\n\t{\n\t\tpublic IError OnError(IError error)\n\t\t{\n\t\t\t if (error.Exception is BookNotFoundException ex)\n\t\t\t\t return error.WithMessage($\"Book with id {ex.BookId} not found\");\n\t\t\t\t \n\t\t\t return error;\n\t\t}\n\t}",
-      "language": "csharp"
+        public IError OnError(IError error)
+        {
+             if (error.Exception is BookNotFoundException ex)
+                 return error.WithMessage($"Book with id {ex.BookId} not found");
+                 
+             return error;
+        }
     }
-  ]
-}
-[/block]
+```
 14. Configuração do manipulador de erros no statup	
-[block:code]
-{
-  "codes": [
-    {
-      "code": "public void ConfigureServices(IServiceCollection services){\n\t\t\n\t\t...\n\t\tservices.AddErrorFilter<BookNotFoundExceptionFilter>();\n\t\t\n\t}",
-      "language": "csharp"
+```csharp
+	public void ConfigureServices(IServiceCollection services){
+        
+        ...
+        services.AddErrorFilter<BookNotFoundExceptionFilter>();
+        
     }
-  ]
-}
-[/block]
+```
 ### Requisições
 Pesquisar Livro
 ### Query
