@@ -250,96 +250,93 @@ A classe DeleteBookInput possui apenas uma propriedade do tipo int que represent
 ### Requisições
 Pesquisar Livro
 ### Query
-[block:code]
+```json
 {
-  "codes": [
-    {
-      "code": "{\n    books {\n        nodes{\n            id,\n            title,\n            price\n        }\n    }\n}",
-      "language": "json"
+    books {
+        nodes{
+            id,
+            title,
+            price
+        }
     }
-  ]
 }
-[/block]
+```
 
-[block:image]
+```json
 {
-  "images": [
-    {
-      "image": [
-        "https://files.readme.io/68ae6ae-PostmanSerachBook.jpg",
-        "PostmanSerachBook.jpg",
-        1491,
-        794,
-        "#2d2e2f"
-      ]
+    authors{
+        nodes{
+            id,
+            name,
+            surname
+        }
     }
-  ]
 }
-[/block]
+```
 Pesquisar Author
 ### Query
-[block:code]
+```json
 {
-  "codes": [
-    {
-      "code": "{\n    authors{\n        nodes{\n            id,\n            name,\n            surname\n        }\n    }\n}",
-      "language": "json"
+    authors(where:{
+       name: "Fernando Pessoa" 
+    }){
+        nodes{
+            id,
+            name,
+            surname
+        }
     }
-  ]
 }
-[/block]
+```
 Pesquisar Author com parametro
 ### Query
 
-[block:code]
+```json
 {
-  "codes": [
-    {
-      "code": "{\n    authors(where:{\n       name: \"Fernando Pessoa\" \n    }){\n        nodes{\n            id,\n            name,\n            surname\n        }\n    }\n}",
-      "language": "json"
+    authors(where:{
+       name: "Fernando Pessoa" 
+    }){
+        nodes{
+            id,
+            name,
+            surname
+        }
     }
-  ]
 }
-[/block]
+```
 Pesquisar Author e Livros
 ### Query
-[block:code]
+```json
 {
-  "codes": [
-    {
-      "code": "{\n    authors{\n        nodes{\n            id,\n            name,\n            surname,\n            books{\n                id,\n                title,\n                price\n            }\n        }\n    }\n}",
-      "language": "json"
+    authors{
+        nodes{
+            id,
+            name,
+            surname,
+            books{
+                id,
+                title,
+                price
+            }
+        }
     }
-  ]
 }
-[/block]
+```
 Criar um novo Livro
 ### Mutation
 
-[block:code]
-{
-  "codes": [
-    {
-      "code": "mutation{\n    createBook(book:{\n        id:7,\n        title : \"new book 4\",\n        authorId: 1,\n        price:12.5\n    }){id, title}\n\n}",
-      "language": "text"
-    }
-  ]
-}
-[/block]
+```json
+mutation{
+    createBook(book:{
+        id:7,
+        title : "new book 4",
+        authorId: 1,
+        price:12.5
+    }){id, title}
 
-[block:image]
-{
-  "images": [
-    {
-      "image": [
-        "https://files.readme.io/b62c559-PostmanCreateBook.jpg",
-        "PostmanCreateBook.jpg",
-        1487,
-        716,
-        "#2f3030"
-      ]
-    }
-  ]
 }
-[/block]
+```
+
+![Alt text](https://files.readme.io/b62c559-PostmanCreateBook.jpg?raw=true "Title")
+
 
