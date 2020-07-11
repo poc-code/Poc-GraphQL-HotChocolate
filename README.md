@@ -250,7 +250,7 @@ A classe DeleteBookInput possui apenas uma propriedade do tipo int que represent
 ### Requisições
 Pesquisar Livro
 ### Query
-```json
+```javascript
 {
     books {
         nodes{
@@ -262,7 +262,7 @@ Pesquisar Livro
 }
 ```
 
-```json
+```javascript
 {
     authors{
         nodes{
@@ -275,7 +275,7 @@ Pesquisar Livro
 ```
 Pesquisar Author
 ### Query
-```json
+```javascript
 {
     authors(where:{
        name: "Fernando Pessoa" 
@@ -291,7 +291,7 @@ Pesquisar Author
 Pesquisar Author com parametro
 ### Query
 
-```json
+```javascript
 {
     authors(where:{
        name: "Fernando Pessoa" 
@@ -306,7 +306,7 @@ Pesquisar Author com parametro
 ```
 Pesquisar Author e Livros
 ### Query
-```json
+```javascript
 {
     authors{
         nodes{
@@ -325,7 +325,7 @@ Pesquisar Author e Livros
 Criar um novo Livro
 ### Mutation
 
-```json
+```javascript
 mutation{
     createBook(book:{
         id:7,
